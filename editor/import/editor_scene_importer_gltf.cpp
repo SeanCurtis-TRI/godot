@@ -38,6 +38,7 @@
 #include "scene/animation/animation_player.h"
 #include "scene/resources/surface_tool.h"
 #include "thirdparty/misc/base64.h"
+#include "core/io/image_loader.h"
 
 uint32_t EditorSceneImporterGLTF::get_import_flags() const {
 
@@ -1117,7 +1118,14 @@ Error EditorSceneImporterGLTF::_parse_images(GLTFState &state, const String &p_b
 			} else {
 
 				uri = p_base_path.plus_file(uri).replace("\\", "/"); //fix for windows
-				Ref<Texture> texture = ResourceLoader::load(uri);
+				Ref<Image> image;
+				image.instance();
+				Error err = ImageLoader::load_image(uri, image);
+
+				Ref<ImageTexture> texture;
+				texture.instance();
+				texture->create_from_image(image);
+				//				Ref<Texture> texture = ResourceLoader::load(uri);
 				state.images.push_back(texture);
 				continue;
 			}
