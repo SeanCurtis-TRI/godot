@@ -1118,6 +1118,7 @@ Error EditorSceneImporterGLTF::_parse_images(GLTFState &state, const String &p_b
 			} else {
 
 				uri = p_base_path.plus_file(uri).replace("\\", "/"); //fix for windows
+				#if 1
 				Ref<Image> image;
 				image.instance();
 				Error err = ImageLoader::load_image(uri, image);
@@ -1125,7 +1126,9 @@ Error EditorSceneImporterGLTF::_parse_images(GLTFState &state, const String &p_b
 				Ref<ImageTexture> texture;
 				texture.instance();
 				texture->create_from_image(image);
-				//				Ref<Texture> texture = ResourceLoader::load(uri);
+				#else
+				Ref<Texture> texture = ResourceLoader::load(uri);
+				#endif
 				state.images.push_back(texture);
 				continue;
 			}
